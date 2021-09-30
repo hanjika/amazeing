@@ -1,4 +1,4 @@
-const allLevels = [LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4];
+const allLevels = [LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5];
 
 /* Start Game */
 
@@ -165,9 +165,8 @@ function createMaze(i) {
             }
         }
     }
+    document.addEventListener("keydown", pressKey);
 }
-
-document.addEventListener("keydown", pressKey);
 
 function pressKey(e) {
     const levelNum = document.querySelector(".maze").getAttribute("id");
@@ -176,17 +175,18 @@ function pressKey(e) {
     const pos = document.getElementById("person");
 
     if (e.keyCode === 37) {
-        if (pos.previousSibling && pos.previousSibling.getAttribute("id") === "path") {
+        if (pos.previousSibling !== null && pos.previousSibling.getAttribute("id") === "path") {
             pos.id = "path";
             pos.previousSibling.id = "person";
-        } else if (pos.previousSibling && pos.previousSibling.getAttribute("id") === "treasure" ) {
+        } else if (pos.previousSibling !== null && pos.previousSibling.getAttribute("id") === "treasure" ) {
             pos.id = "path";
+            document.removeEventListener("keydown", pressKey);
             winner();
         }
     } else if (e.keyCode === 38) {
         let place = pos;
         for (let iterate = 0; iterate < numColumns; iterate++){
-            if (place.previousSibling) {
+            if (place.previousSibling !== null) {
                place = place.previousSibling; 
             }
         }
@@ -195,20 +195,22 @@ function pressKey(e) {
             place.id = "person";
         } else if (place.getAttribute("id") === "treasure" ) {
             pos.id = "path";
+            document.removeEventListener("keydown", pressKey);
             winner();
         }
     } else if (e.keyCode === 39) {
-        if (pos.nextSibling && pos.nextSibling.getAttribute("id") === "path") {
+        if (pos.nextSibling !== null && pos.nextSibling.getAttribute("id") === "path") {
             pos.id = "path";
             pos.nextSibling.id = "person";
-        } else if (pos.nextSibling && pos.nextSibling.getAttribute("id") === "treasure" ) {
+        } else if (pos.nextSibling !== null && pos.nextSibling.getAttribute("id") === "treasure" ) {
             pos.id = "path";
+            document.removeEventListener("keydown", pressKey);
             winner();
         }
     } else if (e.keyCode === 40) {
         let place = pos;
         for (let iterate = 0; iterate < numColumns; iterate++) {
-            if (place.nextSibling) {
+            if (place.nextSibling !== null) {
                 place = place.nextSibling;
             }
         }
@@ -217,6 +219,7 @@ function pressKey(e) {
             place.id = "person";
         } else if (place.getAttribute("id") === "treasure" ) {
             pos.id = "path";
+            document.removeEventListener("keydown", pressKey);
             winner();
         }
     } 
