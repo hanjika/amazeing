@@ -1,4 +1,5 @@
 const allLevels = [LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5];
+var alreadyWon = false;
 
 /* Start Game */
 
@@ -47,7 +48,7 @@ wonPopup.appendChild(endBtn);
 endBtn.classList.add("end-game-btn");
 endBtn.innerText = "End Game";
 endBtn.addEventListener("click", function() {
-    const maze = document.querySelector(".maze");
+    const maze = document.querySelector(".maze-section");
     maze.parentNode.removeChild(maze);
 
     wonPopup.style.display = "none";
@@ -88,9 +89,9 @@ const choose = document.createElement("section");
 document.querySelector("main").appendChild(choose);
 choose.classList.add("choose");
 
-const chooseP = document.createElement("p");
-choose.appendChild(chooseP);
-chooseP.innerText = "Levels";
+const chooseH2 = document.createElement("h2");
+choose.appendChild(chooseH2);
+chooseH2.innerText = "Levels";
 
 const ul = document.createElement("ul");
 choose.appendChild(ul);
@@ -113,55 +114,63 @@ for (const lvl of choiceBtns) {
     });
 }
 
+const chooseBtn = document.createElement("button");
+wonPopup.insertBefore(chooseBtn, endBtn);
+chooseBtn.classList.add("choose-level-btn");
+chooseBtn.innerText = "Choose Level";
+chooseBtn.addEventListener("click", function() {
+    const maze = document.querySelector(".maze-section");
+    maze.parentNode.removeChild(maze);
+
+    wonPopup.style.display = "none";
+    choose.style.display = "flex";
+});
+
 /* Functions */
 
 function createMaze(i) {
-    if (i >= allLevels.length) {
-        completed.style.display = "flex";
-    } else {
-        const level = allLevels[i];
-        const numColumns = level[0].length;
-        const numRows = level.length;
+    const level = allLevels[i];
+    const numColumns = level[0].length;
+    const numRows = level.length;
 
-        const mazeSection = document.createElement("section");
-        document.querySelector("main").appendChild(mazeSection);
-        mazeSection.classList.add("maze-section");
+    const mazeSection = document.createElement("section");
+    document.querySelector("main").appendChild(mazeSection);
+    mazeSection.classList.add("maze-section");
 
-        const title = document.createElement("h2");
-        mazeSection.appendChild(title);
-        title.innerText = "Level " + (i+1);
+    const title = document.createElement("h2");
+    mazeSection.appendChild(title);
+    title.innerText = "Level " + (i+1);
 
-        const maze = document.createElement("div");
-        mazeSection.appendChild(maze);
-        maze.classList.add("maze");
-        maze.setAttribute("id", i);
-        maze.style.gridTemplateColumns = "repeat(" + numColumns + ", 1fr)";
-        maze.style.gridTemplateRows = "repeat(" + numRows + ", 1fr)";
+    const maze = document.createElement("div");
+    mazeSection.appendChild(maze);
+    maze.classList.add("maze");
+    maze.setAttribute("id", i);
+    maze.style.gridTemplateColumns = "repeat(" + numColumns + ", 1fr)";
+    maze.style.gridTemplateRows = "repeat(" + numRows + ", 1fr)";
 
 
-        for (let row = 0; row < numRows; row++) {
-            for (let col = 0; col < numColumns; col++) {
-                if (level[row][col] === "*") {
-                    const square = document.createElement("div");
-                    maze.appendChild(square);
-                    square.setAttribute("id", "wall");
-                } else if (level[row][col] === ".") {
-                    const square = document.createElement("div");
-                    maze.appendChild(square);
-                    square.setAttribute("id", "path");
-                } else if (level[row][col] === "S") {
-                    const start = document.createElement("div");
-                    maze.appendChild(start);
-                    start.setAttribute("id", "person");
-                } else if (level[row][col] === "T") {
-                    const finish = document.createElement("div");
-                    maze.appendChild(finish);
-                    finish.setAttribute("id", "treasure");
-                } else if (level[row][col] === "o") {
-                    const obst = document.createElement("div");
-                    maze.appendChild(obst);
-                    obst.setAttribute("id", "obstacle");
-                }
+    for (let row = 0; row < numRows; row++) {
+        for (let col = 0; col < numColumns; col++) {
+            if (level[row][col] === "*") {
+                const square = document.createElement("div");
+                maze.appendChild(square);
+                square.setAttribute("id", "wall");
+            } else if (level[row][col] === ".") {
+                const square = document.createElement("div");
+                maze.appendChild(square);
+                square.setAttribute("id", "path");
+            } else if (level[row][col] === "S") {
+                const start = document.createElement("div");
+                maze.appendChild(start);
+                start.setAttribute("id", "person");
+            } else if (level[row][col] === "T") {
+                const finish = document.createElement("div");
+                maze.appendChild(finish);
+                finish.setAttribute("id", "treasure");
+            } else if (level[row][col] === "o") {
+                const obst = document.createElement("div");
+                maze.appendChild(obst);
+                obst.setAttribute("id", "obstacle");
             }
         }
     }
@@ -232,6 +241,7 @@ function winner() {
     if (level === allLevels.length - 1) {
         mazeSection.parentNode.removeChild(mazeSection);
         completed.style.display = "flex";
+        document.querySelector(".choose-level-btn").style.display = "block";
     } else {
         const popup = document.querySelector(".winner");
         popup.style.display = "flex";

@@ -66,6 +66,10 @@ li button {
     justify-content: space-evenly;
 }
 
+.choose-level-btn {
+    display: none;
+}
+
 .winner, 
 .completed,
 .choose {
