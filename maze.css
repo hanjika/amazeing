@@ -126,8 +126,10 @@ ul {
     background-image: url("Images/umbrella.png");
 }
 
-@media screen and (min-width: 450px) {
+@media screen and (max-width: 450px) {
     .maze {
-        //width: 50%;
+        height: 50%;
+        width: 100%;
+        left: 0;
     }
 }
