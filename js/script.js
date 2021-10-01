@@ -52,6 +52,9 @@ wonPopup.appendChild(endBtn);
 endBtn.classList.add("end-game-btn");
 endBtn.innerText = "End Game";
 endBtn.addEventListener("click", function() {
+    refresh();
+    totalTime = "";
+
     const maze = document.querySelector(".maze-section");
     maze.parentNode.removeChild(maze);
 
@@ -75,6 +78,12 @@ completed.appendChild(restartBtn);
 restartBtn.classList.add("restart-btn");
 restartBtn.innerText = "Restart Game";
 restartBtn.addEventListener("click", function() {
+    refresh();
+    totalTime = "";
+    const maze = document.querySelector(".maze-section");
+    maze.parentNode.removeChild(maze);
+
+
     completed.style.display = "none";
     start.style.display = "flex";
     completed.removeChild(document.getElementById("resulting-time"));
@@ -85,6 +94,9 @@ completed.appendChild(levelBtn);
 levelBtn.classList.add("level-btn");
 levelBtn.innerText = "Choose Level";
 levelBtn.addEventListener("click", function() {
+    refresh();
+    totalTime = "";
+
     completed.style.display = "none";
     choose.style.display = "flex";
     completed.removeChild(document.getElementById("resulting-time"));
@@ -115,6 +127,11 @@ for (const lvl of choiceBtns) {
     button.innerText = lvl;
     button.addEventListener("click", function() {
         refresh();
+
+        const maze = document.querySelector(".maze-section");
+        maze.parentNode.removeChild(maze);
+
+    
         let num = parseInt(lvl);
         createMaze(num-1);
 
