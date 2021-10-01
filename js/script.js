@@ -1,5 +1,4 @@
 const allLevels = [LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5];
-var alreadyWon = false;
 
 /* Start Game */
 
@@ -9,7 +8,7 @@ document.querySelector("main").appendChild(start);
 
 const startP = document.createElement("h1");
 start.appendChild(startP);
-startP.innerText = "Maze";
+startP.innerText = "Hungry Crab\nMaze";
 
 const startBtn = document.createElement("button");
 start.appendChild(startBtn);
@@ -145,8 +144,8 @@ function createMaze(i) {
     mazeSection.appendChild(maze);
     maze.classList.add("maze");
     maze.setAttribute("id", i);
-    maze.style.gridTemplateColumns = "repeat(" + numColumns + ", 1fr)";
-    maze.style.gridTemplateRows = "repeat(" + numRows + ", 1fr)";
+    maze.style.gridTemplateColumns = "repeat(" + numColumns + ", 50px)";
+    maze.style.gridTemplateRows = "repeat(" + numRows + ", 50px)";
 
 
     for (let row = 0; row < numRows; row++) {
