@@ -14,7 +14,23 @@ body {
 main {
     background-image: url("Images/water.jpg");
 }
+
+.maze-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.maze-header {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+#time {
+    text-align: left;
+    padding-left: 30%;
+}
  
+#time,
 h2, 
 p {
     height: 5%;
@@ -28,6 +44,7 @@ h1 {
     color: #151e3f;
 }
 
+#time,
 h2 {
     font-size: 30px;
     text-transform: uppercase;
@@ -39,7 +56,7 @@ p {
 
 button {
     font-family: 'Londrina Solid', cursive;
-    font-weight: bold;
+    font-weight: 400;
     letter-spacing: 3px;
     height: 10%;
     width: fit-content;
@@ -53,16 +70,6 @@ button {
     border: none;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     transition: 0.4s;
-}
-
-.winner > button {
-    background-color: #f6ae2d;
-    color: white;
-}
-
-.winner > button:hover {
-    background-color: #2596be;
-    color: white;
 }
 
 button:hover {
@@ -99,6 +106,7 @@ li button {
 
 .start, 
 .winner, 
+.game-over,
 .completed, 
 .choose {
     flex-direction: column;
@@ -110,7 +118,8 @@ li button {
     display: none;
 }
 
-.winner, 
+.winner,
+.game-over,
 .completed,
 .choose {
     display: none;
@@ -119,7 +128,7 @@ li button {
     overflow: auto; 
 }
 
-.winner {
+/*.winner {
     background-color: #f26419;
     border-radius: 40px;
     width: 50%;
@@ -127,8 +136,10 @@ li button {
     float: left;
     left: 25%;
     top: 25%;
-}
+}*/
 
+.winner,
+.game-over,
 .completed, 
 .choose {
     width: 100%;

@@ -1,4 +1,8 @@
-const allLevels = [LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5];
+const allLevels = [LEVEL_1/*, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5*/];
+var timeout;
+var timer;
+var totalTime = "";
+var totalSeconds = 0;
 
 /* Start Game */
 
@@ -27,7 +31,7 @@ document.querySelector("main").appendChild(wonPopup);
 
 const p = document.createElement("p");
 wonPopup.appendChild(p);
-p.innerText = "Well done, you won!";
+p.innerText = "Well done!\nYou completed the level in\n";
 
 const nextBtn = document.createElement("button");
 wonPopup.appendChild(nextBtn);
@@ -39,6 +43,7 @@ nextBtn.addEventListener("click", function() {
     
     maze.parentNode.removeChild(maze);
     createMaze(level+1);
+    wonPopup.removeChild(document.getElementById("time-taken"));
     wonPopup.style.display = "none";
 });
 
@@ -50,6 +55,7 @@ endBtn.addEventListener("click", function() {
     const maze = document.querySelector(".maze-section");
     maze.parentNode.removeChild(maze);
 
+    wonPopup.removeChild(document.getElementById("time-taken"));
     wonPopup.style.display = "none";
     start.style.display = "flex";
 });
@@ -62,7 +68,7 @@ document.querySelector("main").appendChild(completed);
 
 const compP = document.createElement("p");
 completed.appendChild(compP);
-compP.innerText = "Congratulations!\nYou have completed every maze";
+compP.innerText = "Congratulations!\nYou have completed every maze in";
 
 const restartBtn = document.createElement("button");
 completed.appendChild(restartBtn);
@@ -71,6 +77,7 @@ restartBtn.innerText = "Restart Game";
 restartBtn.addEventListener("click", function() {
     completed.style.display = "none";
     start.style.display = "flex";
+    completed.removeChild(document.getElementById("resulting-time"));
 });
 
 const levelBtn = document.createElement("button");
@@ -80,6 +87,7 @@ levelBtn.innerText = "Choose Level";
 levelBtn.addEventListener("click", function() {
     completed.style.display = "none";
     choose.style.display = "flex";
+    completed.removeChild(document.getElementById("resulting-time"));
 });
 
 /* Choose level */
@@ -106,6 +114,7 @@ for (const lvl of choiceBtns) {
     button.setAttribute("id", lvl);
     button.innerText = lvl;
     button.addEventListener("click", function() {
+        refresh();
         let num = parseInt(lvl);
         createMaze(num-1);
 
@@ -125,9 +134,52 @@ chooseBtn.addEventListener("click", function() {
     choose.style.display = "flex";
 });
 
+/* Game Over */
+
+const over = document.createElement("section");
+over.classList.add("game-over");
+document.querySelector("main").appendChild(over);
+
+const gameOverP = document.createElement("p");
+over.appendChild(gameOverP);
+gameOverP.innerText = "Game Over";
+gameOverP.setAttribute("id", "game-over-text");
+
+const overP = document.createElement("p");
+over.appendChild(overP);
+overP.innerText = "The ice cream has melted";
+
+const overRestart = document.createElement("button");
+over.appendChild(overRestart);
+overRestart.classList.add("over-restart-btn");
+overRestart.innerText = "Restart Level";
+overRestart.addEventListener("click", function() {
+    const maze = document.querySelector(".maze-section");
+    const level = parseInt(document.querySelector(".maze").getAttribute("id"));
+    maze.parentNode.removeChild(maze);
+    over.style.display = "none";
+    createMaze(level);
+});
+
+const overEndBtn = endBtn.cloneNode(true);
+over.appendChild(overEndBtn);
+overEndBtn.addEventListener("click", function() {
+    const maze = document.querySelector(".maze-section");
+    maze.parentNode.removeChild(maze);
+
+    over.style.display = "none";
+    start.style.display = "flex";
+});
+
 /* Functions */
 
+// Create maze
+
 function createMaze(i) {
+    totalSeconds = 0;
+    timer = setInterval(setTime, 10);
+    timeout = setTimeout(gameOver, 7000);
+
     const level = allLevels[i];
     const numColumns = level[0].length;
     const numRows = level.length;
@@ -136,8 +188,30 @@ function createMaze(i) {
     document.querySelector("main").appendChild(mazeSection);
     mazeSection.classList.add("maze-section");
 
+    const header = document.createElement("div");
+    header.classList.add("maze-header");
+    mazeSection.appendChild(header);
+
+    const time = document.createElement("div");
+    time.setAttribute("id", "time");
+    header.appendChild(time);
+
+    const seconds = document.createElement("label");
+    time.appendChild(seconds);
+    seconds.setAttribute("id", "seconds");
+    seconds.innerHTML = "00";
+
+    const colon = document.createElement("label");
+    time.appendChild(colon);
+    colon.innerHTML = ":";
+
+    const msecs = document.createElement("label");
+    time.appendChild(msecs);
+    msecs.setAttribute("id", "milliseconds");
+    msecs.innerHTML = "00";
+
     const title = document.createElement("h2");
-    mazeSection.appendChild(title);
+    header.appendChild(title);
     title.innerText = "Level " + (i+1);
 
     const maze = document.createElement("div");
@@ -175,6 +249,8 @@ function createMaze(i) {
     }
     document.addEventListener("keydown", pressKey);
 }
+
+// Movement
 
 function pressKey(e) {
     const levelNum = document.querySelector(".maze").getAttribute("id");
@@ -230,19 +306,86 @@ function pressKey(e) {
             document.removeEventListener("keydown", pressKey);
             winner();
         }
-    } 
+    }
 }
 
+// Won game
+
 function winner() {
-    const mazeSection = document.querySelector(".maze-section");
+    refresh();
+
     const level = parseInt(document.querySelector(".maze").getAttribute("id"));
+    var secs = document.getElementById("seconds").innerText;
+    var ms = document.getElementById("milliseconds").innerText;
     
+    document.querySelector(".maze-section").style.display = "none";
+
+    if (secs[0] === "0") {
+        secs = secs.slice(1);
+    }
+
     if (level === allLevels.length - 1) {
-        mazeSection.parentNode.removeChild(mazeSection);
+        totalTime +=  secs + "." + ms + "+";
+        const result = getTotalTime(totalTime);
+        const resultTime = document.createElement("p");
+        completed.insertBefore(resultTime, document.querySelector(".restart-btn"));
+        resultTime.setAttribute("id", "resulting-time");
+        resultTime.innerText = result + " seconds";
+
         completed.style.display = "flex";
         document.querySelector(".choose-level-btn").style.display = "block";
     } else {
-        const popup = document.querySelector(".winner");
-        popup.style.display = "flex";
+        const won = document.querySelector(".winner");
+        won.style.display = "flex";
+
+        const time = document.createElement("p");
+        won.insertBefore(time, document.querySelector(".next-level-btn"));
+        time.setAttribute("id", "time-taken");
+        time.innerText = secs + "." + ms + " seconds";
+        totalTime +=  secs + "." + ms + "+";
     }
 }
+
+// Lost game 
+
+function gameOver() {
+    refresh();
+    document.querySelector(".maze-section").style.display = "none";
+    over.style.display = "flex";
+}
+
+// Timer
+
+function setTime() {
+    ++totalSeconds;
+    document.getElementById("milliseconds").innerHTML = pad(totalSeconds % 60);
+    document.getElementById("seconds").innerHTML = pad(parseInt(totalSeconds / 60)); 
+  }
+  
+  function pad(val) {
+    var valString = val + "";
+    if (valString.length < 2) {
+      return "0" + valString;
+    } else {
+      return valString;
+    }
+  }
+
+  function getTotalTime(str) {
+    var split = str.split("+");
+    split = split.slice(0, -1);
+    var result = 0;
+
+    for (let elem of split) {
+        elem = parseFloat(elem);
+        result += elem;
+    }
+
+    return result;
+  }
+
+function refresh() {
+    clearTimeout(timeout);
+    clearInterval(timer);
+}
+  
