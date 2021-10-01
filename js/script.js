@@ -129,11 +129,14 @@ for (const lvl of choiceBtns) {
         refresh();
 
         const maze = document.querySelector(".maze-section");
-        maze.parentNode.removeChild(maze);
-
-    
+        if (maze) {
+           maze.parentNode.removeChild(maze); 
+        }
+        
         let num = parseInt(lvl);
         createMaze(num-1);
+        console.log(num);
+        console.log("here");
 
         choose.style.display = "none";
     });
@@ -146,6 +149,8 @@ chooseBtn.innerText = "Choose Level";
 chooseBtn.addEventListener("click", function() {
     const maze = document.querySelector(".maze-section");
     maze.parentNode.removeChild(maze);
+
+    wonPopup.removeChild(document.getElementById("time-taken"));
 
     wonPopup.style.display = "none";
     choose.style.display = "flex";
