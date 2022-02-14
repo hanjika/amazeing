@@ -23,6 +23,16 @@ main {
 .maze-header {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    height: 20vh;
+}
+
+.maze {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    justify-content: center;
+    height: 80vh;
+    width: 100vw;
 }
 
 #time {

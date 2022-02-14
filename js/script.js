@@ -348,7 +348,7 @@ function winner() {
 
     if (level === allLevels.length - 1) {
         totalTime +=  secs + "." + ms + "+";
-        const result = getTotalTime(totalTime);
+        const result = getTotalTime(totalTime).toFixed(2);;
         const resultTime = document.createElement("p");
         completed.insertBefore(resultTime, document.querySelector(".restart-btn"));
         resultTime.setAttribute("id", "resulting-time");
